@@ -29,8 +29,28 @@ function makeArticlesArray() {
         content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum molestiae accusamus veniam consectetur tempora, corporis obcaecati ad nisi asperiores tenetur, autem magnam. Iste, architecto obcaecati tenetur quidem voluptatum ipsa quam?'
       },
     ];
+}
+
+function makeMaliciousArticle() {
+  const maliciousArticle = {
+    id: 911,
+    style: 'How-to',
+    date_published: new Date().toISOString(),
+    title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`
   }
+  const expectedArticle = {
+    ...maliciousArticle,
+    title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
+    content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+  }
+  return {
+    maliciousArticle,
+    expectedArticle,
+  }
+}
   
-  module.exports = {
-    makeArticlesArray,
-  }
+module.exports = {
+  makeArticlesArray,
+  makeMaliciousArticle
+}
